@@ -1,26 +1,41 @@
-export const routerRelatives = {
+export const routerRelated = {
   initSlash: "/",
-  teams: {
-    name: "teams",
-    path: "/teams",
+  compositionApi: {
+    path: "/",
+    name: "Home",
     /* childTeamId: {
       paramTeamIdKey: "teamId",
       path: ":teamId",
       name: "team-members",
     }, */
   },
-  users: {
-    path: "/users",
+  sortPjs: {
+    path: "/sort-projects",
+    name: "SortProjects",
   },
-  teamMemb: {
-    path: "/teams/:teamId",
+  products: {
+    path: "/products",
+    name: "Projects",
   },
-  s14animation: {
-    path: "/s14animation",
+  pdAdd: {
+    path: "/products/add",
+    name: "ProductAdd",
   },
-  s15vuex: {
-    name: "s15vuex",
-    path: "/s15vuex",
+  pddetails: {
+    path: "/products/:pid",
+    name: "ProductDetails",
+  },
+  setupwithVuex: {
+    path: "/setup-with-vuex",
+    name: "SetupWithVuex",
+  },
+  useMixins: {
+    path: "/use-mixins",
+    name: "UseMixins",
+  },
+  mixinsInSetup: {
+    path: "/use-mixins-with-setup",
+    name: "MixinsInSetup",
   },
 };
 

@@ -11,6 +11,10 @@
             <input type="text" name="lastName" placeholder="last name" ref="lastNameInput" />
             <button type="button" @click="setLastName">Click Set Last Name</button>
         </div>
+        <cite>UserData compo</cite>
+            <user-data :first-name="twowaybindFn" :last-name="twowaybindLn" :age="user.age" @send-out-data="receiveDataFromChild"></user-data>
+            <p>{{ willReceiveEmitVal }}</p>
+        <cite>End UserData compo</cite>
         <div>
             <input type="text" name="firstNamebind" placeholder="first name" v-model="twowaybindFn" />
             <input type="text" name="lastNamebind" placeholder="last name" v-model="twowaybindLn" />
@@ -27,9 +31,14 @@
 </template>
 
 <script>
-import { ref, reactive, isRef, isReactive, toRefs, computed } from "vue";
+import { ref, reactive, isRef, isReactive, toRefs, computed, watch, provide } from "vue";
+import UserData from './UserData';
+
 export default {
     name: "CompositionNameAge",
+    components: {
+        UserData,
+    },
     setup () {
         const uName = ref('Maxi');
         const user = ref({
@@ -49,6 +58,8 @@ export default {
         const lastNameInput = ref(null);
         const twowaybindFn = ref('');
         const twowaybindLn = ref('');
+        const willReceiveEmitVal = ref('hi, will receive emit val from child...');
+        const anotherNum = ref(47);
 
         setTimeout(() => {
             uName.value = 'Maximmmmmm'
@@ -66,9 +77,7 @@ export default {
             firstName.value = event.target.value;
         }
         const setLastName = () => {
-            debugger
             theLastName.value = lastNameInput.value.value;
-            debugger
         }
 
         setTimeout(() => {
@@ -84,10 +93,23 @@ export default {
             return `${twowaybindFn.value} ${twowaybindLn.value}`;
         })
 
-        console.log('55 -- uName is ref: ', isRef(uName))
-        console.log('56 -- reactiveUser is reactive obj: ', isReactive(reactiveUser), reactiveUser.age)
+        console.log('95 -- uName is ref: ', isRef(uName))
+        console.log('96 -- reactiveUser is reactive obj: ', isReactive(reactiveUser), reactiveUser.age)
 
         const toRefsUser = toRefs(reactiveUserSample)
+
+        const receiveDataFromChild = (age) => {
+            willReceiveEmitVal.value = 'The received age is ' + age.toString();
+        }
+
+        watch([uName, reactiveUser], (nv, ov) => {
+            console.log('105 -- nv: ', nv[0])
+            console.log('106 -- ov: ', ov[0])
+            console.log('107 -- nv: ', nv[1])
+            console.log('108 -- ov: ', ov[1])
+        });
+
+        provide('anotherNumber', anotherNum)
 
         return {
             oneSecondChangedName: uName,
@@ -97,11 +119,14 @@ export default {
             toRefsAge: toRefsUser.age,
             setNewAge,
             setFirstName,
+            lastNameInput,
             setLastName,
             flName,
             twowaybindFn,
             twowaybindLn,
-            twowaybindName
+            twowaybindName,
+            willReceiveEmitVal,
+            receiveDataFromChild
         };
     }
 }

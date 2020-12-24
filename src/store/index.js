@@ -1,12 +1,11 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
+
+import globalState from "./global";
+import { setupWithVuex } from "./modules/setupWithVuex";
 
 export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
-  }
-})
+    globalState,
+    setupWithVuex,
+  },
+});
