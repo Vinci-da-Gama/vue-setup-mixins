@@ -13,19 +13,27 @@
 </template>
 
 <script>
-import { ref, computed, watch, toRefs } from 'vue';
+import { computed, watch, toRefs } from 'vue';
 
 import ProjectItem from './ProjectItem.vue';
+import pjSearchHook from '../../../hooks/search';
 
 export default {
+  name: 'ProjectsListS19AndS20',
   components: {
     ProjectItem,
   },
   props: ['user'],
   setup(props) {
-    const enteredSearchTerm = ref('');
-    const activeSearchTerm = ref('');
     const { user } = toRefs(props);
+    const projects = computed(() => user.value ? user.value.projects ? user.value.projects : [] : []);
+    const {
+      enteredSearchTerm,
+      availableItems,
+      updateSearch,
+    } = pjSearchHook(projects, 'title');
+    /* const enteredSearchTerm = ref('');
+    const activeSearchTerm = ref('');
 
     const availableProjects = computed(() => {
       if (activeSearchTerm.value) {
@@ -34,9 +42,6 @@ export default {
         );
       }
       return props.user.projects;
-    })
-    const hasProjects = computed(() => {
-      return props.user.projects && availableProjects.value.length > 0;
     })
 
     const updateSearch = (val) => {
@@ -49,18 +54,23 @@ export default {
           activeSearchTerm.value = nv;
         }
       }, 300);
-    });
+    }); */
 
-    watch(() => user, (nv) => {
-      enteredSearchTerm.value = nv;
+    const hasProjects = computed(() => {
+      return user.value.projects && availableItems.value.length > 0;
+    })
+
+    watch(() => user, () => {
+      // enteredSearchTerm.value = '';
+      updateSearch('');
     })
 
     return {
       enteredSearchTerm,
-      activeSearchTerm,
-      availableProjects,
-      hasProjects,
-      updateSearch
+      // activeSearchTerm,
+      availableProjects: availableItems,
+      updateSearch,
+      hasProjects
     }
 
   }

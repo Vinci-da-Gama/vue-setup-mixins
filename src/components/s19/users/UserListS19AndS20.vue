@@ -19,9 +19,11 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue';
+import { toRefs } from 'vue';
 
 import UserItem from './UserItem.vue';
+import userSearchHook from '../../../hooks/search';
+import userSortHook from '../../../hooks/sort';
 
 export default {
   name: 'UserListS19AndS20',
@@ -31,60 +33,22 @@ export default {
   props: ['users'],
   emits: ['list-projects'],
   setup(props) {
-    const enteredSearchTerm = ref('');
-    const activeSearchTerm = ref('');
-
-    const availableUsers = computed(() => {
-      let users = [];
-      if (activeSearchTerm.value) {
-        users = props.users.filter((usr) =>
-          usr.fullName.includes(activeSearchTerm.value)
-        );
-      } else if (props.users) {
-        users = props.users;
-      }
-      return users;
-    });
-
-    const updateSearch = (val) => {
-      enteredSearchTerm.value = val;
-    }
-
-    watch(() => enteredSearchTerm, (nv) => {
-      setTimeout(() => {
-        if (nv === enteredSearchTerm.value) {
-          activeSearchTerm.value = nv;
-        }
-      }, 300);
-    })
-
-    const sorting = ref(null);
-    // computed will return ref object
-    const displayedUsers = computed(() => {
-      if (!sorting.value) {
-        return availableUsers.value;
-      }
-      return availableUsers.value.slice().sort((u1, u2) => {
-        if (sorting.value === 'asc' && u1.fullName > u2.fullName) {
-          return 1;
-        } else if (sorting.value === 'asc') {
-          return -1;
-        } else if (sorting.value === 'desc' && u1.fullName > u2.fullName) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-    })
-
-    const sort = (mode) => {
-      sorting.value = mode;
-    }
+    const { users } = toRefs(props);
+    const {
+      enteredSearchTerm,
+      availableItems,
+      updateSearch,
+    } = userSearchHook(users, 'fullName');
+    const {
+      sorting,
+      displayedUsers,
+      sort,
+    } = userSortHook(availableItems, 'fullName');
 
     return {
       enteredSearchTerm,
       // activeSearchTerm,
-      // availableUsers,
+      // availableItems,
       updateSearch,
       sorting,
       displayedUsers,

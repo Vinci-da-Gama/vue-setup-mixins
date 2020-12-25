@@ -13,7 +13,7 @@ import { ref } from 'vue';
 
 import USER_DATA from '../dummy-data';
 import UserList from '../components/s19/users/UserListS19AndS20';
-import ProjectsList from '../components/s19/projects/ProjectsList';
+import ProjectsList from '../components/s19/projects/ProjectsListS19AndS20';
 
 export default {
   components: {
